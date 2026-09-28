@@ -15,9 +15,10 @@ WATCHLIST = {
     "SLGL": {"target_high": 15.00, "target_low": 13.50},
     "SELECT": {"target_high": 33.00, "target_low": 31.00},
     "AGP": {"target_high": 170.00, "target_low": 150.00},
+    "SGPL": {"target_high": 35.00, "target_low": 17.00},
 }
 
-def send_ntfy_push(title, body, priority=3, tags="chart_with_upwards_trend"):
+def send_ntfy_push(title, body, priority=4, tags="chart_with_upwards_trend"):
   url = f"https://ntfy.sh/{NTFY_TOPIC}"
   headers = {
       "Title": title,
