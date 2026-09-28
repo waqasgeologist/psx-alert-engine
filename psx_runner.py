@@ -36,23 +36,49 @@ def send_ntfy_push(title, body, priority=3, tags="chart_with_upwards_trend"):
 
 
 def get_psx_price(symbol):
-  url = f"https://dps.psx.com.pk/company/{symbol}"
+  # Endpoint 1: Direct JSON API used by the PSX chart frontend
+  api_url = f'https://dps.psx.com.pk/timeseries/int/{symbol}'
+
+  session = requests.Session()
   headers = {
-      "User-Agent": (
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,"
-          " like Gecko) Chrome/115.0.0.0 Safari/537.36"
-      )
+      'User-Agent': (
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,'
+          ' like Gecko) Chrome/122.0.0.0 Safari/537.36'
+      ),
+      'Accept': 'application/json, text/plain, */*',
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Referer': f'https://dps.psx.com.pk/company/{symbol}',
+      'Origin': 'https://dps.psx.com.pk',
   }
+
   try:
-    res = requests.get(url, headers=headers, timeout=8)
+    # Try the JSON timeseries first (less likely to be blocked by HTML scrapers)
+    res = session.get(api_url, headers=headers, timeout=10)
     if res.status_code == 200:
-      soup = BeautifulSoup(res.text, "html.parser")
-      quote = soup.find("div", class_="quote__close")
+      data = res.json()
+      # Extract the latest close price from the timeseries
+      if data and 'data' in data and len(data['data']) > 0:
+        latest_tick = data['data'][-1]  # [timestamp, price, volume]
+        return float(latest_tick[1])
+  except Exception as e:
+    print(f'JSON API failed for {symbol}: {e}')
+
+  # Fallback: Scrape the HTML page
+  try:
+    page_url = f'https://dps.psx.com.pk/company/{symbol}'
+    res = session.get(page_url, headers=headers, timeout=10)
+    if res.status_code == 200:
+      from bs4 import BeautifulSoup
+
+      soup = BeautifulSoup(res.text, 'html.parser')
+      quote = soup.find('div', class_='quote__close')
       if quote:
-        raw = quote.text.replace("Rs.", "").replace(",", "").strip()
-        return float(raw)
-  except Exception as err:
-    print(f"Error reading {symbol}: {err}")
+        return float(quote.text.replace('Rs.', '').replace(',', '').strip())
+    else:
+      print(f'PSX blocked runner IP with HTTP status {res.status_code}')
+  except Exception as e:
+    print(f'HTML fallback failed for {symbol}: {e}')
+
   return None
 
 
