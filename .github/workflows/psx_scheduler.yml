@@ -37,8 +37,16 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Direct Ping Test to Phone
+        run: |
+          # Sends an instant test ping from GitHub runner directly to ntfy
+          curl -H "Title: GitHub Runner Connected" \
+               -H "Priority: 4" \
+               -d "GitHub Actions runner is alive and executing your alert script." \
+               https://ntfy.sh/psx_my_alerts_7731
+
       - name: Setup Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
@@ -47,7 +55,5 @@ jobs:
           pip install requests beautifulsoup4
 
       - name: Run Alert Runner
-        env:
-          NTFY_TOPIC: psx_my_alerts_7731
         run: |
           python psx_runner.py
