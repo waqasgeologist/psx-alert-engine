@@ -17,7 +17,7 @@ on:
     - cron: '15 10 * * 1-4'  # 15:15 PKT
     - cron: '25 10 * * 1-4'  # 15:25 PKT
     - cron: '35 10 * * 1-4'  # 15:35 PKT
-    - cron: '33 4 * * 5'     # 09:33 PKT (Friday)
+    - cron: '18 4 * * 5'     # 09:18 PKT (Friday)
     - cron: '0 5 * * 5'      # 10:00 PKT
     - cron: '30 5 * * 5'     # 10:30 PKT
     - cron: '0 6 * * 5'      # 11:00 PKT
