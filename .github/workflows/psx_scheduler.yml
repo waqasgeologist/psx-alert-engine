@@ -43,7 +43,7 @@ jobs:
           curl -H "Title: GitHub Runner Connected" \
                -H "Priority: 4" \
                -d "GitHub Actions runner is alive and executing your alert script." \
-               https://ntfy.sh/psx_my_alerts_7731
+               https://ntfy.sh/Khan_PSX_Alerts
 
       - name: Setup Python
         uses: actions/setup-python@v5
