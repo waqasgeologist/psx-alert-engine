@@ -129,7 +129,7 @@ def main():
   send_ntfy_push(
       title=f"PSX Update ({time_label})",
       body=digest_body,
-      priority=3,
+      priority=5,
       tags="bar_chart",
   )
   print("--- Run completed ---")
