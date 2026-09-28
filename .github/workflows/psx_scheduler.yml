@@ -1,0 +1,56 @@
+name: PSX Scheduled Price Alerts
+
+on:
+  schedule:
+    # Monday to Thursday (09:15 to 15:35 PKT is 04:15 to 10:35 UTC)
+    - cron: '33 4 * * 1-4'   # 09:33 PKT
+    - cron: '45 4 * * 1-4'   # 09:45 PKT
+    - cron: '0 5 * * 1-4'    # 10:00 PKT
+    - cron: '30 5 * * 1-4'   # 10:30 PKT
+    - cron: '0 6 * * 1-4'    # 11:00 PKT
+    - cron: '30 6 * * 1-4'   # 11:30 PKT
+    - cron: '0 7 * * 1-4'    # 12:00 PKT
+    - cron: '30 7 * * 1-4'   # 12:30 PKT
+    - cron: '30 8 * * 1-4'   # 13:30 PKT
+    - cron: '0 9 * * 1-4'    # 14:00 PKT
+    - cron: '30 9 * * 1-4'   # 14:30 PKT
+    - cron: '0 10 * * 1-4'   # 15:00 PKT
+    - cron: '15 10 * * 1-4'  # 15:15 PKT
+    - cron: '25 10 * * 1-4'  # 15:25 PKT
+    - cron: '35 10 * * 1-4'  # 15:35 PKT
+
+    # Friday (Includes Session 1 and Session 2)
+    - cron: '33 4 * * 5'     # 09:33 PKT
+    - cron: '0 5 * * 5'      # 10:00 PKT
+    - cron: '30 5 * * 5'     # 10:30 PKT
+    - cron: '0 6 * * 5'      # 11:00 PKT
+    - cron: '55 6 * * 5'     # 11:55 PKT (Pre-Jummah close)
+    - cron: '35 9 * * 5'     # 14:35 PKT (Session 2 start)
+    - cron: '0 10 * * 5'     # 15:00 PKT
+    - cron: '30 10 * * 5'    # 15:30 PKT
+    - cron: '0 11 * * 5'     # 16:00 PKT
+    - cron: '35 11 * * 5'    # 16:35 PKT (Friday market close)
+
+  workflow_dispatch: # Allows you to manually trigger a test at any moment
+
+jobs:
+  check-psx-prices:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          pip install requests beautifulsoup4
+
+      - name: Run Alert Runner
+        env:
+          NTFY_TOPIC: psx_my_alerts_7731
+        run: |
+          python psx_runner.py
