@@ -2,7 +2,6 @@ name: PSX Scheduled Price Alerts
 
 on:
   schedule:
-    # Monday to Thursday (09:15 to 15:35 PKT is 04:15 to 10:35 UTC)
     - cron: '33 4 * * 1-4'   # 09:33 PKT
     - cron: '45 4 * * 1-4'   # 09:45 PKT
     - cron: '0 5 * * 1-4'    # 10:00 PKT
@@ -18,20 +17,18 @@ on:
     - cron: '15 10 * * 1-4'  # 15:15 PKT
     - cron: '25 10 * * 1-4'  # 15:25 PKT
     - cron: '35 10 * * 1-4'  # 15:35 PKT
-
-    # Friday (Includes Session 1 and Session 2)
-    - cron: '33 4 * * 5'     # 09:33 PKT
+    - cron: '33 4 * * 5'     # 09:33 PKT (Friday)
     - cron: '0 5 * * 5'      # 10:00 PKT
     - cron: '30 5 * * 5'     # 10:30 PKT
     - cron: '0 6 * * 5'      # 11:00 PKT
-    - cron: '55 6 * * 5'     # 11:55 PKT (Pre-Jummah close)
-    - cron: '35 9 * * 5'     # 14:35 PKT (Session 2 start)
+    - cron: '55 6 * * 5'     # 11:55 PKT
+    - cron: '35 9 * * 5'     # 14:35 PKT
     - cron: '0 10 * * 5'     # 15:00 PKT
     - cron: '30 10 * * 5'    # 15:30 PKT
     - cron: '0 11 * * 5'     # 16:00 PKT
-    - cron: '35 11 * * 5'    # 16:35 PKT (Friday market close)
+    - cron: '35 11 * * 5'    # 16:35 PKT
 
-  workflow_dispatch: # Allows you to manually trigger a test at any moment
+  workflow_dispatch:
 
 jobs:
   check-psx-prices:
@@ -41,7 +38,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
