@@ -1,3 +1,4 @@
+# Force scheduler sync
 name: PSX Scheduled Price Alerts
 
 on:
